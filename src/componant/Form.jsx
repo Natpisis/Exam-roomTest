@@ -1,25 +1,9 @@
 import { useState, useEffect } from "react";
 import "./Form.css";
 import Select from "react-select";
-/*function Swr(){
-  const fetcher = (url) => fetch().then((res) => res.json()) 
-  const {data, error} = useSWR('https://c265-2405-9800-b520-3a6f-4867-a84e-abca-1301.ngrok-free.app/select_data/Examtable' , fetcher);
 
-  if(error) {
-    return <div>Error Loading...</div>
-  }
 
-  return(
-    <div>
-      <h2>
-        {data?.map((val) => (
-            <p>{val}</p>
-        ))}
-      </h2>
-    </div>
-  )
 
-}*/
 
 const Form = () => {
   /*const [formData, setFormData] = useState({
