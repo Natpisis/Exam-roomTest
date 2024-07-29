@@ -1,13 +1,13 @@
-.container{
+.container-form{
   max-width: auto;
   background: #fff;
   width: auto;
   padding: 25px 40px 10px 40px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  
 }
-body{
+.body-form{
   display: flex;
-  align-items: top;
+  align-items: center;
   justify-content: center;
   min-height: 100vh;
   padding: 10px;

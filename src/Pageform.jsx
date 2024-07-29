@@ -1,16 +1,19 @@
 import { useState,useEffect } from 'react'
 import './Pageform.css'
 import Form from './componant/Form'
+import Navbar from './componant/Navbar'
 
 function Pageform() {
   
 
   return (
     <>
-      <div className="App">
+      <header>
+        <Navbar />
+      </header>
       <Form />
       
-      </div>
+      
     </>
   )
   

@@ -112,8 +112,10 @@ const Form = () => {
   };
 
   return (
-    <form className="container" onSubmit={handleSubmit}>
+    <div className="body-form">
+    <form className="container-form" onSubmit={handleSubmit}>
       <h1>โปรแกรมห้องข้อสอบ</h1>
+      
       <div>
         <label htmlFor="type">ชื่อวิชา:</label>
 
@@ -346,6 +348,7 @@ const Form = () => {
         </button>
       </div>
     </form>
+    </div>
   );
 };
 

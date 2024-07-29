@@ -40,33 +40,38 @@ function Loginform() {
   }
 
   return (
-    <form className="container" onSubmit={handleSubmit}>
-      <img src={SUlogo} className="LogoSu" />
-      <h1 className="Textcenter">Login Silpakorn</h1>
-      <div className="">
-        <label htmlFor="email" className="form-rowlogin">
-          Your Name
-        </label>
-        <input
-          type="text"
-          id="Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="">
-        <label htmlFor="password" className="form-rowPassword">
-          Your password
-        </label>
-        <input
-          type="password"
-          id="Password"
-          className=""
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+    <form className="container-logo" onSubmit={handleSubmit}>
+  <div className="bodyLogin">
+    <div className="logo-container">
+      <img src={SUlogo} className="LogoSu"  />
+    </div>
+    <h1 className="Textcenter">Login Silpakorn</h1>
+    <div className="form-group">
+      <label htmlFor="Name" className="form-rowlogin">
+        Your Name
+      </label>
+      <input
+        type="text"
+        id="Name"
+        className="form-control"
+        onChange={(e) => setName(e.target.value)}
+      />
+    </div>
+    <div className="form-group">
+      <label htmlFor="Password" className="form-rowPassword">
+        Your Password
+      </label>
+      <input
+        type="password"
+        id="Password"
+        className="form-control"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </div>
+    <button onClick={Login} type="submit" className="btn-submit">Submit</button>
+  </div>
+</form>
 
-      <button onClick={Login} type="submit">Submit</button>
-    </form>
   );
 }
 
