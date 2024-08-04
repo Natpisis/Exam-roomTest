@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./Form.css";
 import Select from "react-select";
 
+// Const ส่งข้อมูลไปเก็บ
 const Form = () => {
   const [Data, setData] = useState({
     Ref: "", // เลขลำดับ
@@ -28,7 +29,7 @@ const Form = () => {
 
   const [dataE, setDataE] = useState([]);
   const [dataExamDetail, setDataExamDetail] = useState([]);
-
+ //Api จาก Exam Table
   useEffect(() => {
     async function read_data_database() {
       try {
@@ -55,7 +56,8 @@ const Form = () => {
     }
     read_data_database();
   }, []);
-
+  
+  // Api จาก Exam-detail
   useEffect(() => {
     async function read_data_Examdetail() {
       try {
@@ -90,6 +92,7 @@ const Form = () => {
     read_data_Examdetail();
   }, []);
 
+  //เปลี่ยนค่าในช่อง INPUT
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -97,7 +100,7 @@ const Form = () => {
       [name]: value,
     });
   };
-
+  //เช็คว่ากรอกครบไหม
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form data submitted:", Data);
@@ -106,7 +109,7 @@ const Form = () => {
       return;
     }
   };
-
+  //Set ข้อมูล Examtable - Detail
   const handleIdChangeWithref = (selectedOption) => {
     const selectedDetail = dataExamDetail.find(detail => detail.ref === selectedOption.ref) || {};
     setData({
@@ -131,6 +134,7 @@ const Form = () => {
     console.log("Select Detail : ", selectedDetail);
   };
 
+  //css select 
   const customStyles = {
     control: (provided) => ({
       ...provided,
