@@ -4,6 +4,8 @@ import Select from "react-select";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
+  const url = "https://cd45-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+
   const [Data, setData] = useState({
     Ref: "", // เลขลำดับ
     NoSt: "", // จำนวนนศ
@@ -34,7 +36,7 @@ const Form = () => {
     async function read_data_database() {
       try {
         const response = await fetch(
-          "https://cd45-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app/select_data/Examtable"
+          url+"/select_data/Examtable"
         );
         const data = await response.json();
         console.log("Fetched data:", data);
@@ -62,7 +64,7 @@ const Form = () => {
     async function read_data_Examdetail() {
       try {
         const response = await fetch(
-          "https://cd45-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app/select_data/DetailExam"
+          url+"/select_data/DetailExam"
         );
         const dataDetail = await response.json();
         console.log("Feact ExamDetail:", dataDetail);
@@ -148,7 +150,7 @@ const Form = () => {
       ...provided,
       backgroundColor: "#FFFFFF", // Light blue background for dropdown
     }),
-    option: (provided, state) => ({
+    option: (provided) => ({
       ...provided,
       backgroundColor: "#FFFFFF", // Sky blue for selected, light blue for others
       color: "#000000", // Dark blue text color
