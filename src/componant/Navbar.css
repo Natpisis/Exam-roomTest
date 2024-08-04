@@ -1,10 +1,16 @@
-/* Reset default styles for ul and li */
+/* Navbar.css */
+
 ul {
     list-style-type: none; /* Remove bullet points */
     margin: 0; /* Remove default margin */
     padding: 0; /* Remove default padding */
     overflow: hidden; /* Clear floats */
     background-color: #27962c; /* Dark background for navbar */
+    width: 100%; /* Full width */
+    position: fixed; /* Fix the navbar */
+    top: 0; /* Stick to the top */
+    left: 0; /* Stick to the left */
+    z-index: 1000; /* Ensure it stays on top of other elements */
 }
 
 /* Make list items float left */
@@ -33,6 +39,3 @@ ul:after {
     display: table;
     clear: both;
 }
-
-
-  

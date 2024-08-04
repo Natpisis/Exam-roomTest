@@ -8,16 +8,16 @@ function Navbar() {
             <div >
             <ul >
             <li>
-                <a href="#">Home</a>
+                <a href="#">ส่งข้อสอบ</a>
             </li>
             <li>
-                <a href="#" >About</a>
+                <a href="#" >แก้ไขข้อสอบ</a>
             </li>
             <li>
-                <a href="#" >Services</a>
+                <a href="#" >ดูข้อสอบ</a>
             </li>
             <li>
-                <a href="#" >Contact</a>
+                <a href="#" >นำเข้าข้อมูล</a>
             </li>
             </ul>
          </div>

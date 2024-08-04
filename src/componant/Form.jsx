@@ -2,59 +2,44 @@ import { useState, useEffect } from "react";
 import "./Form.css";
 import Select from "react-select";
 
-
-
-
 const Form = () => {
-  /*const [formData, setFormData] = useState({
-    total: '',
-    page: '',
-    color: '',
-    date:'',
-    type:'',
-    calculator:'',
-    paperans:'',
-    conditions:'',
-    fileexam:''
-  });''*/
-  
   const [Data, setData] = useState({
     Ref: "", // เลขลำดับ
-    NoSt: "0", // จำนวนนศ
-    Submit: "", //ส่งข้อสอบยัง
-    SubDate: new Date(), //วันที่
-    name: "อ. พู่",
-    Copy: 2, // จำนวนชุด
-    Page: 10, //มีกี่หน้า
-    Receive: true, //มารับข้อสอบยัง
-    RecDate: "2024-07-17", //
-    Qty: 5, //----จำนวนข้อสอบ
-    StapleApart: "", //เย็บยังไง
-    Calculator: true, //เครื่องคิดเลข
-    AnswerSheet: false, //ใช้กระดาษคำตอบไหม
-    AnswerBookUse: "Math Book", //เปิดหนังสือได้ไหม
-    Remark: "Urgent",
-    Color: "Blue", //สีข้อสอบ
-    Examday: new Date(),
-    Timex: "12.00 - 14.00",
-    hour: "3 hr",
+    NoSt: "", // จำนวนนศ
+    submit: false, //ส่งข้อสอบยัง
+    sub_date: new Date(), //วันที่
+    Lecturer: "",
+    copy: "", // จำนวนชุด
+    page: "", //มีกี่หน้า
+    recive: false, //มารับข้อสอบยัง
+    recDate: "", //
+    qty: "", //----จำนวนข้อสอบ
+    staple_conner: "", //เย็บยังไง
+    staple_apart: "", //มีกี่ตอน
+    calculator: false, //เครื่องคิดเลข
+    answerSheet: false, //ใช้กระดาษคำตอบไหม
+    answerBookUse: "", //เปิดหนังสือได้ไหม
+    remark: "",
+    color: "", //สีข้อสอบ
+    eDate: "",
+    eTime: "",
+    hr: "",
   });
 
-  
+  const [dataE, setDataE] = useState([]);
+  const [dataExamDetail, setDataExamDetail] = useState([]);
 
-  const [dataE, setDatae] = useState([]);
   useEffect(() => {
     async function read_data_database() {
       try {
         const response = await fetch(
-          "https://657c-184-22-13-155.ngrok-free.app/select_data/Examtable"
+          "https://cd45-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app/select_data/Examtable"
         );
         const data = await response.json();
-        console.log("Fetched data:", data); // Inspect data structure
+        console.log("Fetched data:", data);
 
-        // Transform the data into the format required by react-select
         const formattedOptions = data.map((item) => ({
-          ref: item.ref, // Replace with the unique identifier
+          ref: item.ref,
           course: item.Course,
           Lecturer: item.Lecturer,
           eDate: item.eDate,
@@ -63,291 +48,336 @@ const Form = () => {
           NoSt: item.no_st,
           label: item.Course,
         }));
-        setDatae(formattedOptions);
+        setDataE(formattedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     }
     read_data_database();
   }, []);
-  console.log(dataE);
 
-  //let ttt = formData.total +','+ formData.page+','+ formData.color+','+ formData.date+','+ formData.type+','+ formData.calculator+','+ formData.paperans+','+ formData.conditions;
+  useEffect(() => {
+    async function read_data_Examdetail() {
+      try {
+        const response = await fetch(
+          "https://cd45-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app/select_data/DetailExam"
+        );
+        const dataDetail = await response.json();
+        console.log("Feact ExamDetail:", dataDetail);
+
+        const formattedDataExamDetail = dataDetail.map((item) => ({
+          ref: item.ref,
+          no_st: item.no_st,
+          submit: item.submit,
+          copy: item.copy,
+          page: item.page,
+          recive: item.recive,
+          recDate: item.recDate,
+          qty: item.qty,
+          staple_conner: item.staple_conner,
+          staple_apart: item.staple_apart,
+          calculator: item.calculator,
+          answerSheet: item.answerSheet,
+          answerBookUse: item.answerBookUse,
+          remark: item.remark,
+          color: item.color,
+        }));
+        setDataExamDetail(formattedDataExamDetail);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    read_data_Examdetail();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({
       ...Data,
-      [name]: value
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form data submitted:", Data);
-    //console.log(ttt);
     if (!Data.total) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
       return;
     }
   };
 
-  /*const insert = async () => {
-    try {
-         await axios.post('https://6228-184-22-12-234.ngrok-free.app/insert_detail_exam/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            } ,
-        });
-
-    } 
-    catch (error) {
-
-         }
-    };*/
-  const handleIdChangeWithid = (selectedOption) => {
-    setData({ ...Data, Ref: selectedOption.ref, NoSt: selectedOption.NoSt });
+  const handleIdChangeWithref = (selectedOption) => {
+    const selectedDetail = dataExamDetail.find(detail => detail.ref === selectedOption.ref) || {};
+    setData({
+      ...Data,
+      Ref: selectedOption.ref,
+      NoSt: selectedOption.NoSt,
+      Lecturer: selectedOption.Lecturer,
+      eDate: selectedOption.eDate,
+      eTime: selectedOption.eTime,
+      hr: selectedOption.hr,
+      copy: selectedDetail.copy,
+      page: selectedDetail.page,
+      color: selectedDetail.color,
+      sub_date: new Date(),
+      staple_conner: selectedDetail.staple_conner,
+      staple_apart : selectedDetail.staple_apart,
+      calculator : selectedDetail.calculator,
+      answerBookUse : selectedDetail.answerBookUse,
+      remark : selectedDetail.remark,
+    });
     console.log("Selected option:", selectedOption);
+    console.log("Select Detail : ", selectedDetail);
+  };
+
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF", // Light blue background
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "#000000", // Dark blue text color
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF", // Light blue background for dropdown
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF", // Sky blue for selected, light blue for others
+      color: "#000000", // Dark blue text color
+    }),
   };
 
   return (
     <div className="body-form">
-    <form className="container-form" onSubmit={handleSubmit}>
-      <h1>โปรแกรมห้องข้อสอบ</h1>
-      
-      <div>
-        <label htmlFor="type">ชื่อวิชา:</label>
+      <form className="container-form" onSubmit={handleSubmit} >
+        <h1>โปรแกรมห้องข้อสอบ</h1>
 
-        <Select options={dataE} onChange={handleIdChangeWithid} />
-
+        <div>
+          <label htmlFor="type">ชื่อวิชา:</label>
+          <Select options={dataE} onChange={handleIdChangeWithref} styles={customStyles} />
+          <br></br>
+          <br></br>
+          <label htmlFor="page">Ref</label>
+          <input
+            className="form-row"
+            type="text"
+            id="ref"
+            name="ref"
+            value={Data.Ref}
+          />
+          <br></br>
+          <br></br>
+          <label htmlFor="Lecturer">ชื่อ อาจาร์ย:</label>
+          <input
+            className="form-row"
+            type="text"
+            id="Lecturer"
+            name="Lecturer"
+            value={Data.Lecturer}
+          />
+          <br></br>
+          <br></br>
+          <label htmlFor="page">วันสอบ</label>
+          <input
+            className="form-row"
+            type="text"
+            id="Examday"
+            name="Examday"
+            value={Data.eDate}
+          />
+          <label htmlFor="page">เวลาสอบ</label>
+          <input
+            className="form-row"
+            type="text"
+            id="Timex"
+            name="Timex"
+            value={Data.eTime}
+          />
+          <br></br>
+          <br></br>
+          <label htmlFor="page">ชั่วโมง</label>
+          <input
+            className="form-row"
+            type="text"
+            id="hr"
+            name="hr"
+            value={Data.hr}
+          />
+          <label htmlFor="page">จำนวน นศ.</label>
+          <input
+            className="form-row"
+            type="text"
+            id="NoSt"
+            name="NoSt"
+            value={Data.NoSt}
+          />
+          <label htmlFor="page">สถานะการส่งข้อสอบ</label>
+          <input
+            className="form-row"
+            type="text"
+            id="Submit"
+            name="Submit"
+            value={Data.submit ? "ส่งแล้ว" : "ยังไม่ได้ส่ง"}
+          />
+        </div>
         <br></br>
-
         <br></br>
+        <div>
+          <h1>รายละเอียดการสอบ</h1>
+        </div>
 
-        <label htmlFor="name">ชื่อ อาจาร์ย:</label>
-
-        <input
-          className="form-row"
-          type="text"
-          id="name"
-          name="name"
-          value={Data.name}
-          onChange={handleChange}
-        />
-        <br></br>
-        <br></br>
-        <label htmlFor="page">วันสอบ</label>
-
-        <input
-          className="form-row"
-          type="date"
-          id="Examday"
-          name="Examday"
-          value={Data.Examday}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="page">เวลาสอบ</label>
-
-        <input
-          className="form-row"
-          type="text"
-          id="Timex"
-          name="Timex"
-          value={Data.Timex}
-          onChange={handleChange}
-        />
-        <br></br>
-        <br></br>
-        <label htmlFor="page">ชั่วโมง</label>
-
-        <input
-          className="form-row"
-          type="text"
-          id="hour"
-          name="hour"
-          value={Data.hour}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="page">จำนวน นศ.</label>
-
-        <input
-          className="form-row"
-          type="text"
-          id="NoSt"
-          name="NoSt"
-          value={Data.NoSt}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="page">สถานะการส่งข้อสอบ</label>
-
-        <input
-          className="form-row"
-          type="text"
-          id="Submit"
-          name="Submit"
-          value={Data.Submit}
-          onChange={handleChange}
-        />
-        
-      </div>
-      <br></br>
-      <br></br>
-      <div>
-        <h1>รายละเอียดการสอบ</h1>
-      </div>
-
-      <div>
         <div>
           <div>
-            <label htmlFor="page">จำนวนชุด:</label>
+            <div>
+              <label htmlFor="page">จำนวนชุด:</label>
+              <input
+                className="form-row"
+                type="text"
+                id="Copy"
+                name="copy"
+                value={Data.copy}
+                onChange={handleChange}
+              />
+              <label htmlFor="total">จำนวนหน้า:</label>
+              <input
+                className="form-row"
+                type="text"
+                id="Page"
+                name="page"
+                value={Data.page}
+                onChange={handleChange}
+              />
+              <label htmlFor="color">สีข้อสอบ:</label>
+              <input
+                type="text"
+                id="Color"
+                name="color"
+                value={Data.color}
+                onChange={handleChange}
+              />
+              <br></br>
+              <br></br>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="date">วันที่ส่ง:</label>
             <input
               className="form-row"
-              type="text"
-              id="Copy"
-              name="Copy"
-              value={Data.Copy}
+              type="date"
+              id="SubDate"
+              name="sub_date"
+              value={Data.sub_date}
               onChange={handleChange}
             />
-
-            <label htmlFor="total">จำนวนหน้า:</label>
+            <label htmlFor="StapleApart">รูปแบบการเย็บ:</label>
             <input
               className="form-row"
-              type="text"
-              id="Page"
-              name="Page"
-              value={Data.Page}
+              type="datalist"
+              id="StapleApart"
+              name="staple_conner"
+              list="typerOptions"
+              value={Data.staple_conner}
               onChange={handleChange}
             />
-
-            <label htmlFor="color">สีข้อสอบ:</label>
+            <datalist id="typerOptions">
+              <option value="เย็บมุมรวม"></option>
+              <option value="เย็บแยกตอน"></option>
+            </datalist>
+            <label htmlFor="staple_apart">จำนวนตอน:</label>
             <input
               type="text"
-              id="Color"
-              name="Color"
-              value={Data.Color}
+              id="staple_apart"
+              name="staple_apart"
+              value={Data.staple_apart}
               onChange={handleChange}
             />
             <br></br>
             <br></br>
           </div>
+
+          <div>
+            <label>Calculator:</label>
+            <input
+              type="radio"
+              id="Calculator-yes"
+              name="calculator"
+              value="ใช้ได้"
+              checked={Data.calculator === "ใช้ได้"}
+              onChange={handleChange}
+            />
+            <label htmlFor="calculator-yes">ใช้ได้</label>
+            <input
+              type="radio"
+              id="Calculator-no"
+              name="calculator"
+              value="ใช้ไม่ได้"
+              checked={Data.calculator === "ใช้ไม่ได้"}
+              onChange={handleChange}
+            />
+            <label htmlFor="Calculator-no">ใช้ไม่ได้</label>
+            <br></br>
+            <br></br>
+          </div>
+
+          <div>
+            <label>กระดาษคำตอบ:</label>
+            <input
+              type="radio"
+              id="AnswerSheet-yes"
+              name="answerSheet"
+              value="ใช้ได้"
+              checked={Data.answerSheet === "ใช้ได้"}
+              onChange={handleChange}
+            />
+            <label htmlFor="AnswerSheet-yes">ใช้ได้</label>
+            <input
+              type="radio"
+              id="AnswerSheet-no"
+              name="answerSheet"
+              value="ใช้ไม่ได้"
+              checked={Data.answerSheet === "ใช้ไม่ได้"}
+              onChange={handleChange}
+            />
+            <label htmlFor="AnswerSheet-no">ใช้ไม่ได้</label>
+            <br></br>
+            <br></br>
+          </div>
+
+          <div>
+            <label htmlFor="AnswerBookUse">เงื่อนไขการสอบ:</label>
+            <input
+              type="text"
+              id="AnswerBookUse"
+              name="answerBookUse"
+              value={Data.answerBookUse}
+              onChange={handleChange}
+            />
+            <br></br>
+            <br></br>
+          </div>
+
+          <div>
+            <label htmlFor="fileexam">ไฟล์ข้อสอบ:</label>
+            <input
+              type="file"
+              id="fileexam"
+              name="fileexam"
+              onChange={handleChange}
+            />
+            <br></br>
+            <br></br>
+          </div>
+
+          <button onClick={handleSubmit} type="submit">
+            Submit
+          </button>
         </div>
-
-        <div>
-          <label htmlFor="date">วันที่ส่ง:</label>
-          <input
-            className="form-row"
-            type="date"
-            id="SubDate"
-            name="SubDate"
-            value={Data.SubDate}
-            onChange={handleChange}
-          />
-
-          <label htmlFor="StapleApart">รูปแบบการเย็บ:</label>
-          <input
-            type="datalist"
-            id="StapleApart"
-            name="StapleApart"
-            list="typerOptions"
-            value={Data.StapleApart}
-            onChange={handleChange}
-          />
-          <datalist id="typerOptions">
-            <option value="แนวขวาง"></option>
-            <option value="แนวตรง"></option>
-            <option value="เย็บมุม"></option>
-          </datalist>
-          <br></br>
-          <br></br>
-        </div>
-
-        <div>
-          <label>Calculator:</label>
-
-          <input
-            type="radio"
-            id="Calculator-yes"
-            name="Calculator"
-            value="ใช้ได้"
-            checked={Data.Calculator === "ใช้ได้"}
-            onChange={handleChange}
-          />
-          <label htmlFor="calculator-yes">ใช้ได้</label>
-
-          <input
-            type="radio"
-            id="Calculator-no"
-            name="Calculator"
-            value="ใช้ไม่ได้"
-            checked={Data.Calculator === "ใช้ไม่ได้"}
-            onChange={handleChange}
-          />
-          <label htmlFor="Calculator-no">ใช้ไม่ได้</label>
-          <br></br>
-          <br></br>
-        </div>
-
-        <div>
-          <label>กระดาษคำตอบ:</label>
-
-          <input
-            type="radio"
-            id="AnswerSheet-yes"
-            name="AnswerSheet"
-            value="ใช้ได้"
-            checked={Data.AnswerSheet === "ใช้ได้"}
-            onChange={handleChange}
-          />
-          <label htmlFor="AnswerSheet-yes">ใช้ได้</label>
-
-          <input
-            type="radio"
-            id="AnswerSheet-no"
-            name="AnswerSheet"
-            value="ใช้ไม่ได้"
-            checked={Data.AnswerSheet === "ใช้ไม่ได้"}
-            onChange={handleChange}
-          />
-          <label htmlFor="AnswerSheet-no">ใช้ไม่ได้</label>
-          <br></br>
-          <br></br>
-        </div>
-
-        <div>
-          <label htmlFor="AnswerBookUse">เงื่อนไขการสอบ:</label>
-          <input
-            type="text"
-            id="AnswerBookUse"
-            name="AnswerBookUse"
-            value={Data.AnswerBookUse}
-            onChange={handleChange}
-          />
-          <br></br>
-          <br></br>
-        </div>
-
-        <div>
-          <label htmlFor="fileexam">ไฟล์ข้อสอบ:</label>
-          <input
-            type="file"
-            id="fileexam"
-            name="fileexam"
-            value={Data.fileexam}
-            onChange={handleChange}
-          />
-          <br></br>
-          <br></br>
-        </div>
-
-        <button onClick={handleSubmit} type="submit">
-          Submit
-        </button>
-      </div>
-    </form>
+      </form>
     </div>
   );
 };
