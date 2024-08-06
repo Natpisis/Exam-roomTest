@@ -1,5 +1,6 @@
 import React from 'react';
 import './Navbar.css';
+import Search from './Search';
 
 function Navbar() {
   return (
@@ -8,13 +9,13 @@ function Navbar() {
             <div >
             <ul >
             <li>
-                <a href="#">ส่งข้อสอบ</a>
+                <a href="/Pageform">ส่งข้อสอบ</a>
             </li>
             <li>
-                <a href="#" >แก้ไขข้อสอบ</a>
+                <a href="" >แก้ไขข้อสอบ</a>
             </li>
             <li>
-                <a href="#" >ดูข้อสอบ</a>
+                <a href="/PageSearch" >ดูข้อสอบ</a>
             </li>
             <li>
                 <a href="#" >นำเข้าข้อมูล</a>
