@@ -1,18 +1,40 @@
 .container-form {
   max-width: 100%;
-  
   width: 100%;
-  padding: 100px;
+  padding: 20px;
   border-radius: 20px;
 }
 
 .body-form {
   display: flex;
+  flex-direction: column; /* Align items in a column */
   align-items: center;
   justify-content: center;
   min-height: 40vh;
   padding: 20px;
-  margin-top: 10px; /* เว้นระยะห่างจาก navbar */
-  
+  margin-top: 10px; /* Space from the navbar */
 }
 
+.table-container {
+  margin-top: 20px; /* Space between the search box and the table */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: 0 auto;
+  text-align: left;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+}
