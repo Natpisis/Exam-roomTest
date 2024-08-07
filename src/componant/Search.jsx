@@ -9,18 +9,14 @@ const Search = () => {
         { value: 'Audi', label: 'Audi' }
     ];
 
-    const customStyles = {
-        control: (provided) => ({
-            ...provided,
-            width: 300, // กำหนดความกว้างที่ต้องการ
-        }),
-    };
+    
 
     return (
         <div className="body-form">
             <div className="container-form">
                 <label htmlFor="type">ชื่อวิชา:</label>
-                <Select options={cars} styles={customStyles} />
+                <Select options={cars}  />
+                
             </div>
         </div>
     );

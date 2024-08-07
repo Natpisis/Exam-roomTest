@@ -1,22 +1,18 @@
 .container-form {
-  max-width: 300px; /* Increased width for better appearance */
-  background: #fff;
+  max-width: 100%;
+  
   width: 100%;
-  padding: 20px; /* Adjusted padding for better spacing */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added shadow for better visibility */
-  border-radius: 8px; /* Added border-radius for rounded corners */
+  padding: 100px;
+  border-radius: 20px;
 }
 
 .body-form {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 50vh; /* Increased height for better centering */
-  padding: 100px; /* Adjusted padding for better spacing */
-  background: #f0f0f0; /* Added background color for contrast */
+  min-height: 40vh;
+  padding: 20px;
+  margin-top: 10px; /* เว้นระยะห่างจาก navbar */
   
 }
 
-.select-custom {
-  width: 100%; /* กำหนดความกว้างให้เต็ม */
-}

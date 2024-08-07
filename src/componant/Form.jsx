@@ -140,20 +140,20 @@ const Form = () => {
   const customStyles = {
     control: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", // Light blue background
+      backgroundColor: "#FFFFFF",
     }),
     singleValue: (provided) => ({
       ...provided,
-      color: "#000000", // Dark blue text color
+      color: "#000000",
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", // Light blue background for dropdown
+      backgroundColor: "#FFFFFF", 
     }),
     option: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", // Sky blue for selected, light blue for others
-      color: "#000000", // Dark blue text color
+      backgroundColor: "#FFFFFF", 
+      color: "#000000", 
     }),
   };
 
