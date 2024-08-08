@@ -4,7 +4,7 @@ import Select from "react-select";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
-  const url = "https://9454-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+  const url = "https://1b6a-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [Data, setData] = useState({
     Ref: "", // เลขลำดับ

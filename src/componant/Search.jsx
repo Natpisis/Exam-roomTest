@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://9454-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+    "https://1b6a-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
   const [Data, setData] = useState({
@@ -59,26 +63,86 @@ const Search = () => {
     read_data_database();
   }, []);
 
-  const handleSelectChange = (selectedOption) => {
-    setSelectedCourse(selectedOption);
+  const customStyles = {
+    control: (provided) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF",
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "#000000",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF", 
+    }),
+    option: (provided) => ({
+      ...provided,
+      backgroundColor: "#FFFFFF", 
+      color: "#000000", 
+    }),
   };
 
-  const handleSearchClick = () => {
-    setShowTable(true);
+  const handleCourseSearch = () => {
+    if (selectedCourse) {
+      const filtered = Data.filter((item) => item.course === selectedCourse.course);
+      setSearchResults(filtered);
+      setShowTable(true);
+    }
+  };
+
+  const handleDateSearch = () => {
+    if (selectedDate) {
+      const filtered = Data.filter((item) => item.eDate === selectedDate);
+      setSearchResults(filtered);
+      setShowTable(true);
+    }
+  };
+
+  const handleSearchReset = () => {
+    setSelectedCourse(null);
+    setSelectedDate(null);
+    setSearchResults([]);
+    setShowTable(false);
   };
 
   return (
     <div className="body-form">
       <div className="container-form">
-        <label htmlFor="type">ชื่อวิชา:</label>
-        <Select options={Data} onChange={handleSelectChange} />
-        <button onClick={handleSearchClick}>
-          Search
+        <h3>ค้นหาด้วยวิชา</h3>
+        <Select
+          options={Data}
+          onChange={(option) => {
+            setSelectedCourse(option);
+            setSelectedDate(null); // Reset date when course is selected
+          }}
+          value={selectedCourse}
+          styles={customStyles}
+        />
+        <br></br>
+        <button onClick={handleCourseSearch} disabled={!selectedCourse}>
+          Search by Course
         </button>
       </div>
 
-      {showTable && selectedCourse && (
-        <div className="table-container">
+      <div className="container-form" style={{ marginTop: '20px' }}>
+        <h3>ค้นหาด้วยวันที่</h3>
+        <DatePicker
+          selected={selectedDate}
+          onChange={(date) => {
+            setSelectedDate(date);
+            setSelectedCourse(null); // Reset course when date is selected
+          }}
+          value={selectedDate}
+          styles={customStyles}
+        />
+        <button onClick={handleDateSearch} disabled={!selectedDate}>
+          Search by Date
+        </button>
+      </div>
+
+      {showTable && searchResults.length > 0 && (
+        <div className="table-container" style={{ marginTop: '20px' }}>
           <table>
             <thead>
               <tr>
@@ -91,18 +155,28 @@ const Search = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>{selectedCourse.ref}</td>
-                <td>{selectedCourse.course}</td>
-                <td>{selectedCourse.eDate}</td>
-                <td>{selectedCourse.eTime}</td>
-                <td>{selectedCourse.hr}</td>
-                <td>{selectedCourse.NoSt}</td>
-              </tr>
+              {searchResults.map((item) => (
+                <tr key={item.ref}>
+                  <td>{item.ref}</td>
+                  <td>{item.course}</td>
+                  <td>{item.eDate}</td>
+                  <td>{item.eTime}</td>
+                  <td>{item.hr}</td>
+                  <td>{item.NoSt}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       )}
+
+      {showTable && searchResults.length === 0 && (
+        <p style={{ marginTop: '20px' }}>No results found for the selected criteria.</p>
+      )}
+
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={handleSearchReset}>Reset Search</button>
+      </div>
     </div>
   );
 };
