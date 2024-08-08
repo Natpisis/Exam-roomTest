@@ -355,12 +355,12 @@ const Form = () => {
           </div>
 
           <div>
-            <label htmlFor="AnswerBookUse">เงื่อนไขการสอบ:</label>
+            <label htmlFor="remark">เงื่อนไขการสอบ:</label>
             <input
               type="text"
-              id="AnswerBookUse"
-              name="answerBookUse"
-              value={Data.answerBookUse}
+              id="remark"
+              name="remark"
+              value={Data.remark}
               onChange={handleChange}
             />
             <br></br>
