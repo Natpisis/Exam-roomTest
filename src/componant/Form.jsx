@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import "./Form.css";
 import Select from "react-select";
+import axios from "axios";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
-  const url = "https://1b6a-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+  const url = "https://2cee-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [Data, setData] = useState({
     Ref: "", // เลขลำดับ
@@ -19,8 +20,8 @@ const Form = () => {
     qty: "", //----จำนวนข้อสอบ
     staple_conner: "", //เย็บยังไง
     staple_apart: "", //มีกี่ตอน
-    calculator: false, //เครื่องคิดเลข
-    answerSheet: false, //ใช้กระดาษคำตอบไหม
+    calculator: "ใช้ได้", //เครื่องคิดเลข
+    answerSheet: "ใช้ได้", //ใช้กระดาษคำตอบไหม
     answerBookUse: "", //เปิดหนังสือได้ไหม
     remark: "",
     color: "", //สีข้อสอบ
@@ -102,12 +103,21 @@ const Form = () => {
       [name]: value,
     });
   };
+  async function Sentdata() {
+    const response = await axios.post(url + '/Edit_DetailExam/' + JSON.stringify(Data), {
+      headers: {
+          'Content-Type': 'multipart/form-data'
+      }
+  });
+  console.log(response);
+  }
   //เช็คว่ากรอกครบไหม
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Form data submitted:", Data);
     if (!Data.total) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+      Sentdata();
       return;
     }
   };

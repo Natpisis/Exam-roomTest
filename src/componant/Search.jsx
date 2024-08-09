@@ -6,14 +6,15 @@ import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://1b6a-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+    "https://2cee-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
-  const [Data, setData] = useState({
+  const [Data, setData] = useState({ 
+        course:"", 
         Ref: "", // เลขลำดับ
         NoSt: "", // จำนวนนศ
         submit: false, //ส่งข้อสอบยัง
@@ -47,7 +48,7 @@ const Search = () => {
 
         const formattedOptions = data.map((item) => ({
           ref: item.ref,
-          course: item.Course,
+          Course: item.Course,
           Lecturer: item.Lecturer,
           eDate: item.eDate,
           eTime: item.eTime,
@@ -147,22 +148,24 @@ const Search = () => {
             <thead>
               <tr>
                 <th>Ref</th>
-                <th>Course</th>
-                <th>Exam Date</th>
-                <th>Exam Time</th>
-                <th>Duration</th>
-                <th>Number of Students</th>
+                <th>ชื่อวิชา</th>
+                <th>วันสอบ</th>
+                <th>เวลาสอบ</th>
+                <th>จำนวนชั่วโมง</th>
+                <th>จำนวนนักศึกษา</th>
+                <th>ชื่ออาจาร์ย</th>
               </tr>
             </thead>
             <tbody>
               {searchResults.map((item) => (
                 <tr key={item.ref}>
                   <td>{item.ref}</td>
-                  <td>{item.course}</td>
+                  <td>{item.Course}</td>
                   <td>{item.eDate}</td>
                   <td>{item.eTime}</td>
                   <td>{item.hr}</td>
                   <td>{item.NoSt}</td>
+                  <td>{item.Lecturer}</td>
                 </tr>
               ))}
             </tbody>
