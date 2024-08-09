@@ -5,10 +5,10 @@ import axios from "axios";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
-  const url = "https://2cee-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+  const url = "https://261c-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [Data, setData] = useState({
-    Ref: "", // เลขลำดับ
+    Ref: 0, // เลขลำดับ
     NoSt: "", // จำนวนนศ
     submit: false, //ส่งข้อสอบยัง
     sub_date: new Date(), //วันที่
@@ -180,7 +180,7 @@ const Form = () => {
           <label htmlFor="page">Ref </label>
           <input
             className="form-row"
-            type="text"
+            type= 'number'
             id="ref"
             name="ref"
             value={Data.Ref}

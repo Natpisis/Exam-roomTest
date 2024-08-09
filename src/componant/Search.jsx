@@ -6,7 +6,7 @@ import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://2cee-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+    "https://261c-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
