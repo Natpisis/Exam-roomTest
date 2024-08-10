@@ -12,6 +12,7 @@ const Search = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
 
   const [Data, setData] = useState({ 
         course:"", 
@@ -100,6 +101,14 @@ const Search = () => {
     }
   };
 
+  const handleRomSearch = ()=>{
+    if(selectedRoom) {
+      const filrered = Data.filter((item) => item.Room === selectedRoom.Room);
+      setSearchResults(filrered);
+      setShowTable(true);
+    }
+  }
+
   const handleSearchReset = () => {
     setSelectedCourse(null);
     setSelectedDate(null);
@@ -124,14 +133,13 @@ const Search = () => {
         <button onClick={handleCourseSearch} disabled={!selectedCourse}>
           Search by Course
         </button>
-      </div>
 
-      <div className="container-form" style={{ marginTop: '20px' }}>
         <h3>ค้นหาด้วยวันที่</h3>
         <DatePicker
           selected={selectedDate}
           onChange={(date) => {
             setSelectedDate(date);
+            setSelectedRoom(null);
             setSelectedCourse(null); // Reset course when date is selected
           }}
           value={selectedDate}
@@ -139,6 +147,22 @@ const Search = () => {
         />
         <button onClick={handleDateSearch} disabled={!selectedDate}>
           Search by Date
+        </button>
+
+        <h3>ค้นหาด้วยห้องสอบ</h3>
+        <Select
+          options={Data}
+          onChange={(option) => {
+            setSelectedCourse(null);
+            setSelectedDate(null); 
+            setSelectedRoom(option);// Reset date when course is selected
+          }}
+          value={selectedRoom}
+          styles={customStyles}
+        />
+        <br></br>
+        <button onClick={handleRomSearch} disabled={!selectedRoom}>
+          Search by Room
         </button>
       </div>
 

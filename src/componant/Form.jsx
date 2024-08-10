@@ -5,26 +5,27 @@ import axios from "axios";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
-  const url = "https://261c-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+  const url =
+    "https://4aa7-2405-9800-b520-3a6f-b916-76e4-226c-c021.ngrok-free.app";
 
   const [Data, setData] = useState({
-    Ref: 0, // เลขลำดับ
-    NoSt: "", // จำนวนนศ
-    submit: false, //ส่งข้อสอบยัง
-    sub_date: new Date(), //วันที่
+    Ref: 0,
+    NoSt: "",
+    submit: false,
+    sub_date: new Date(),
     Lecturer: "",
-    copy: "", // จำนวนชุด
-    page: "", //มีกี่หน้า
-    recive: false, //มารับข้อสอบยัง
-    recDate: "", //
-    qty: "", //----จำนวนข้อสอบ
-    staple_conner: "", //เย็บยังไง
-    staple_apart: "", //มีกี่ตอน
-    calculator: "ใช้ได้", //เครื่องคิดเลข
-    answerSheet: "ใช้ได้", //ใช้กระดาษคำตอบไหม
-    answerBookUse: "", //เปิดหนังสือได้ไหม
+    copy: "",
+    page: "",
+    recive: false,
+    recDate: "",
+    qty: "",
+    staple_conner: "",
+    staple_apart: "",
+    calculator: "อนุญาต",
+    answerSheet: "ใช้ได้",
+    answerBookUse: "",
     remark: "",
-    color: "", //สีข้อสอบ
+    color: "",
     eDate: "",
     eTime: "",
     hr: "",
@@ -32,26 +33,29 @@ const Form = () => {
 
   const [dataE, setDataE] = useState([]);
   const [dataExamDetail, setDataExamDetail] = useState([]);
- //Api จาก Exam Table
+  const [lecturerOptions, setLecturerOptions] = useState([]);
+
+  // Api จาก Exam Table
   useEffect(() => {
     async function read_data_database() {
       try {
-        const response = await fetch(
-          url+"/select_data/Examtable"
-        );
+        const response = await fetch(url + "/select_data/Examtable");
         const data = await response.json();
         console.log("Fetched data:", data);
 
         const formattedOptions = data.map((item) => ({
           ref: item.ref,
           course: item.Course,
-          Lecturer: item.Lecturer,
+          lecturers: item.Lecturer.split(",").map((lecturer) =>
+            lecturer.trim()
+          ), // แยกชื่ออาจารย์
           eDate: item.eDate,
           eTime: item.eTime,
           hr: item.hr,
           NoSt: item.no_st,
           label: item.Course,
         }));
+
         setDataE(formattedOptions);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -59,14 +63,12 @@ const Form = () => {
     }
     read_data_database();
   }, []);
-  
+
   // Api จาก Exam-detail
   useEffect(() => {
     async function read_data_Examdetail() {
       try {
-        const response = await fetch(
-          url+"/select_data/DetailExam"
-        );
+        const response = await fetch(url + "/select_data/DetailExam");
         const dataDetail = await response.json();
         console.log("Feact ExamDetail:", dataDetail);
 
@@ -95,7 +97,7 @@ const Form = () => {
     read_data_Examdetail();
   }, []);
 
-  //เปลี่ยนค่าในช่อง INPUT
+  // เปลี่ยนค่าในช่อง INPUT
   const handleChange = (e) => {
     const { name, value } = e.target;
     setData({
@@ -103,14 +105,35 @@ const Form = () => {
       [name]: value,
     });
   };
-  async function Sentdata() {
-    const response = await axios.post(url + '/Edit_DetailExam/' + JSON.stringify(Data), {
-      headers: {
-          'Content-Type': 'multipart/form-data'
-      }
-  });
-  console.log(response);
-  }
+
+  // เมื่อเลือก Ref จาก Dropdown
+  const handleIdChangeWithref = (selectedOption) => {
+    const selectedDetail =
+      dataExamDetail.find((detail) => detail.ref === selectedOption.ref) || {};
+    setData({
+      ...Data,
+      Ref: selectedOption.ref,
+      NoSt: selectedOption.NoSt,
+      Lecturer: "", // เคลียร์ชื่ออาจารย์ก่อนเพื่อให้เลือกใหม่จาก datalist
+      eDate: selectedOption.eDate,
+      eTime: selectedOption.eTime,
+      hr: selectedOption.hr,
+      copy: selectedDetail.copy,
+      page: selectedDetail.page,
+      color: selectedDetail.color,
+      sub_date: new Date(),
+      staple_conner: selectedDetail.staple_conner,
+      staple_apart: selectedDetail.staple_apart,
+      calculator: selectedDetail.calculator,
+      answerBookUse: selectedDetail.answerBookUse,
+      remark: selectedDetail.remark,
+    });
+    // อัปเดตรายการอาจารย์ตาม Ref ที่เลือก
+    setLecturerOptions(selectedOption.lecturers);
+    console.log("Selected option:", selectedOption);
+    console.log("Select Detail:", selectedDetail);
+  };
+
   //เช็คว่ากรอกครบไหม
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -121,32 +144,20 @@ const Form = () => {
       return;
     }
   };
-  //Set ข้อมูล Examtable - Detail
-  const handleIdChangeWithref = (selectedOption) => {
-    const selectedDetail = dataExamDetail.find(detail => detail.ref === selectedOption.ref) || {};
-    setData({
-      ...Data,
-      Ref: selectedOption.ref,
-      NoSt: selectedOption.NoSt,
-      Lecturer: selectedOption.Lecturer,
-      eDate: selectedOption.eDate,
-      eTime: selectedOption.eTime,
-      hr: selectedOption.hr,
-      copy: selectedDetail.copy,
-      page: selectedDetail.page,
-      color: selectedDetail.color,
-      sub_date: new Date(),
-      staple_conner: selectedDetail.staple_conner,
-      staple_apart : selectedDetail.staple_apart,
-      calculator : selectedDetail.calculator,
-      answerBookUse : selectedDetail.answerBookUse,
-      remark : selectedDetail.remark,
-    });
-    console.log("Selected option:", selectedOption);
-    console.log("Select Detail : ", selectedDetail);
-  };
 
-  //css select 
+  async function Sentdata() {
+    const response = await axios.post(
+      url + "/Edit_DetailExam/" + JSON.stringify(Data),
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    console.log(response);
+  }
+
+  // css select
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -158,43 +169,56 @@ const Form = () => {
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", 
+      backgroundColor: "#FFFFFF",
     }),
     option: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", 
-      color: "#000000", 
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
     }),
   };
 
   return (
     <div className="body-form">
-      <form className="container-form" onSubmit={handleSubmit} >
+      <form className="container-form" onSubmit={handleSubmit}>
         <h1>โปรแกรมห้องข้อสอบ</h1>
 
         <div>
           <label htmlFor="type">ชื่อวิชา:</label>
-          <Select options={dataE} onChange={handleIdChangeWithref} styles={customStyles} />
+          <Select
+            options={dataE}
+            onChange={handleIdChangeWithref}
+            styles={customStyles}
+          />
           <br></br>
           <br></br>
           <label htmlFor="page">Ref </label>
           <input
             className="form-row"
-            type= 'number'
+            type="number"
             id="ref"
             name="ref"
             value={Data.Ref}
+            readOnly
           />
           <br></br>
           <br></br>
           <label htmlFor="Lecturer">ชื่อ อาจาร์ย:</label>
-          <input
+          <select
             className="form-row"
-            type="text"
             id="Lecturer"
             name="Lecturer"
             value={Data.Lecturer}
-          />
+            onChange={handleChange}
+          >
+            <option value="">เลือกชื่ออาจารย์</option>
+            {lecturerOptions.map((lecturer, index) => (
+              <option key={index} value={lecturer}>
+                {lecturer}
+              </option>
+            ))}
+          </select>
+
           <br></br>
           <br></br>
           <label htmlFor="page">วันสอบ</label>
@@ -204,6 +228,7 @@ const Form = () => {
             id="Examday"
             name="Examday"
             value={Data.eDate}
+            readOnly
           />
           <label htmlFor="page">เวลาสอบ</label>
           <input
@@ -212,6 +237,7 @@ const Form = () => {
             id="Timex"
             name="Timex"
             value={Data.eTime}
+            readOnly
           />
           <br></br>
           <br></br>
@@ -222,6 +248,7 @@ const Form = () => {
             id="hr"
             name="hr"
             value={Data.hr}
+            readOnly
           />
           <label htmlFor="page">จำนวน นศ.</label>
           <input
@@ -230,6 +257,7 @@ const Form = () => {
             id="NoSt"
             name="NoSt"
             value={Data.NoSt}
+            readOnly
           />
           <label htmlFor="page">สถานะการส่งข้อสอบ</label>
           <input
@@ -238,6 +266,7 @@ const Form = () => {
             id="Submit"
             name="Submit"
             value={Data.submit ? "ส่งแล้ว" : "ยังไม่ได้ส่ง"}
+            readOnly
           />
         </div>
         <br></br>
@@ -322,20 +351,20 @@ const Form = () => {
               type="radio"
               id="Calculator-yes"
               name="calculator"
-              value="ใช้ได้"
-              checked={Data.calculator === "ใช้ได้"}
+              value="อนุญาต"
+              checked={Data.calculator === "อนุญาต"}
               onChange={handleChange}
             />
-            <label htmlFor="calculator-yes">ใช้ได้</label>
+            <label htmlFor="calculator-yes">อนุญาต</label>
             <input
               type="radio"
               id="Calculator-no"
               name="calculator"
-              value="ใช้ไม่ได้"
-              checked={Data.calculator === "ใช้ไม่ได้"}
+              value="ไม่อนุญาต"
+              checked={Data.calculator === "ไม่อนุญาต"}
               onChange={handleChange}
             />
-            <label htmlFor="Calculator-no">ใช้ไม่ได้</label>
+            <label htmlFor="Calculator-no">ไม่อนุญาต</label>
             <br></br>
             <br></br>
           </div>
@@ -367,12 +396,16 @@ const Form = () => {
           <div>
             <label htmlFor="remark">เงื่อนไขการสอบ:</label>
             <input
-              type="text"
+              type="datalist"
               id="remark"
               name="remark"
+              list="RemarkOptions"
               value={Data.remark}
               onChange={handleChange}
             />
+            <datalist id="RemarkOptions">
+              <option value="เอากระดาษเข้าได้"></option>
+            </datalist>
             <br></br>
             <br></br>
           </div>
