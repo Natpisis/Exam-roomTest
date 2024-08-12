@@ -6,7 +6,7 @@ import axios from "axios";
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
   const url =
-    "https://4aa7-2405-9800-b520-3a6f-b916-76e4-226c-c021.ngrok-free.app";
+    "https://b6c8-2405-9800-b520-3a6f-19f4-74c1-ea73-553f.ngrok-free.app";
 
   const [Data, setData] = useState({
     Ref: 0,
@@ -33,13 +33,14 @@ const Form = () => {
 
   const [dataE, setDataE] = useState([]);
   const [dataExamDetail, setDataExamDetail] = useState([]);
+  const [dataRoomexam,setRoomexam] = useState([]);
   const [lecturerOptions, setLecturerOptions] = useState([]);
 
   // Api จาก Exam Table
   useEffect(() => {
     async function read_data_database() {
       try {
-        const response = await fetch(url + "/select_data/Examtable");
+        const response = await fetch(url + "/select_data/examtable");
         const data = await response.json();
         console.log("Fetched data:", data);
 
@@ -68,12 +69,12 @@ const Form = () => {
   useEffect(() => {
     async function read_data_Examdetail() {
       try {
-        const response = await fetch(url + "/select_data/DetailExam");
+        const response = await fetch(url + "/select_data/detailexam");
         const dataDetail = await response.json();
         console.log("Feact ExamDetail:", dataDetail);
 
         const formattedDataExamDetail = dataDetail.map((item) => ({
-          ref: item.ref,
+          ref: item.Ref,
           no_st: item.no_st,
           submit: item.submit,
           copy: item.copy,
@@ -95,6 +96,34 @@ const Form = () => {
       }
     }
     read_data_Examdetail();
+  }, []);
+
+  //Api ExamRoom
+  useEffect(() => {
+    async function read_data_ExamRoom() {
+      try {
+        const response = await fetch(url + "/select_data/roomexam");
+        const dataDetail = await response.json();
+        console.log("Feact RoomExam:", dataDetail);
+
+        const formattedDataRoomExam = dataDetail.map((item) => ({
+          Ref: item.Ref,
+          No: item.No,
+          Edate: item.Edate,
+          Etime:item.Etime,
+          Hr: item.Hr,
+          Course: item.Course,
+          Num_st: item.Num_st,
+          Room: item.Room,
+          Proctor: item.Proctor,
+          Remark: item,
+        }));
+        setRoomexam(formattedDataRoomExam);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    read_data_ExamRoom();
   }, []);
 
   // เปลี่ยนค่าในช่อง INPUT

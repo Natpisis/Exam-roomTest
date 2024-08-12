@@ -1,51 +1,28 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://261c-2405-9800-b520-3a6f-7df5-36a2-3746-c6bc.ngrok-free.app";
+    "https://b6c8-2405-9800-b520-3a6f-19f4-74c1-ea73-553f.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
-  const [selectedRoom, setSelectedRoom] = useState(null);
 
-  const [Data, setData] = useState({ 
-        course:"", 
-        Ref: "", // เลขลำดับ
-        NoSt: "", // จำนวนนศ
-        submit: false, //ส่งข้อสอบยัง
-        sub_date: new Date(), //วันที่
-        Lecturer: "",
-        copy: "", // จำนวนชุด
-        page: "", //มีกี่หน้า
-        recive: false, //มารับข้อสอบยัง
-        recDate: "", //
-        qty: "", //----จำนวนข้อสอบ
-        staple_conner: "", //เย็บยังไง
-        staple_apart: "", //มีกี่ตอน
-        calculator: false, //เครื่องคิดเลข
-        answerSheet: false, //ใช้กระดาษคำตอบไหม
-        answerBookUse: "", //เปิดหนังสือได้ไหม
-        remark: "",
-        color: "", //สีข้อสอบ
-        eDate: "",
-        eTime: "",
-        hr: "",
-  });
+  const [Data, setData] = useState([]);
+  const [RoomData, setRoomData] = useState([]);
 
+  // Api ExamTable
   useEffect(() => {
     async function read_data_database() {
       try {
-        const response = await fetch(
-          url+"/select_data/Examtable"
-        );
+        const response = await fetch(url + "/select_data/examtable");
         const data = await response.json();
-        console.log("Fetched data:", data);
+        console.log("Fetched ExamTable data:", data);
 
         const formattedOptions = data.map((item) => ({
           ref: item.ref,
@@ -55,14 +32,46 @@ const Search = () => {
           eTime: item.eTime,
           hr: item.hr,
           NoSt: item.no_st,
-          label: item.Course,
+          Room: item.Room,
+          label: item.Course, // Display Course as the label
+          value: item.Course, // Store Course as the value
         }));
         setData(formattedOptions);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching ExamTable data:", error);
       }
     }
     read_data_database();
+  }, []);
+
+  // Api ExamRoom
+  useEffect(() => {
+    async function read_data_ExamRoom() {
+      try {
+        const response = await fetch(url + "/select_data/roomexam");
+        const dataDetail = await response.json();
+        console.log("Fetched RoomExam data:", dataDetail);
+
+        const formattedRoomOptions = dataDetail.map((item) => ({
+          Ref: item.Ref,
+          No: item.No,
+          Edate: item.Edate,
+          Etime: item.Etime,
+          Hr: item.Hr,
+          Course: item.Course,
+          Num_st: item.Num_st,
+          Room: item.Room,
+          Proctor: item.Proctor,
+          Remark: item.Remark,
+          label: item.Room, // Display Room as the label
+          value: item.Room, // Store Room as the value
+        }));
+        setRoomData(formattedRoomOptions);
+      } catch (error) {
+        console.error("Error fetching RoomExam data:", error);
+      }
+    }
+    read_data_ExamRoom();
   }, []);
 
   const customStyles = {
@@ -76,18 +85,20 @@ const Search = () => {
     }),
     menu: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", 
+      backgroundColor: "#FFFFFF",
     }),
     option: (provided) => ({
       ...provided,
-      backgroundColor: "#FFFFFF", 
-      color: "#000000", 
+      backgroundColor: "#FFFFFF",
+      color: "#000000",
     }),
   };
 
   const handleCourseSearch = () => {
     if (selectedCourse) {
-      const filtered = Data.filter((item) => item.course === selectedCourse.course);
+      const filtered = Data.filter(
+        (item) => item.Course === selectedCourse.Course
+      );
       setSearchResults(filtered);
       setShowTable(true);
     }
@@ -95,23 +106,31 @@ const Search = () => {
 
   const handleDateSearch = () => {
     if (selectedDate) {
-      const filtered = Data.filter((item) => item.eDate === selectedDate);
+      const filtered = Data.filter((item) => item.eDate === selectedDate.eDate);
       setSearchResults(filtered);
       setShowTable(true);
     }
   };
 
-  const handleRomSearch = ()=>{
-    if(selectedRoom) {
-      const filrered = Data.filter((item) => item.Room === selectedRoom.Room);
-      setSearchResults(filrered);
+  const handleRoomSearch = () => {
+    if (selectedRoom) {
+      const filtered = RoomData.filter((item) => item.Room === selectedRoom.Room);
+
+      // Filter duplicates based on 'Ref'
+      const uniqueResults = filtered.filter(
+        (item, index, self) =>
+          index === self.findIndex((t) => t.Ref === item.Ref)
+      );
+
+      setSearchResults(uniqueResults);
       setShowTable(true);
     }
-  }
+  };
 
   const handleSearchReset = () => {
     setSelectedCourse(null);
     setSelectedDate(null);
+    setSelectedRoom(null);
     setSearchResults([]);
     setShowTable(false);
   };
@@ -124,7 +143,8 @@ const Search = () => {
           options={Data}
           onChange={(option) => {
             setSelectedCourse(option);
-            setSelectedDate(null); // Reset date when course is selected
+            setSelectedDate(null);
+            setSelectedRoom(null);
           }}
           value={selectedCourse}
           styles={customStyles}
@@ -135,12 +155,12 @@ const Search = () => {
         </button>
 
         <h3>ค้นหาด้วยวันที่</h3>
-        <DatePicker
-          selected={selectedDate}
-          onChange={(date) => {
-            setSelectedDate(date);
+        <Select
+          options={Data.map(item => ({ ...item, label: item.eDate, value: item.eDate }))}
+          onChange={(option) => {
+            setSelectedCourse(null);
+            setSelectedDate(option);
             setSelectedRoom(null);
-            setSelectedCourse(null); // Reset course when date is selected
           }}
           value={selectedDate}
           styles={customStyles}
@@ -151,28 +171,29 @@ const Search = () => {
 
         <h3>ค้นหาด้วยห้องสอบ</h3>
         <Select
-          options={Data}
+          options={RoomData}
           onChange={(option) => {
             setSelectedCourse(null);
-            setSelectedDate(null); 
-            setSelectedRoom(option);// Reset date when course is selected
+            setSelectedDate(null);
+            setSelectedRoom(option);
           }}
           value={selectedRoom}
           styles={customStyles}
         />
         <br></br>
-        <button onClick={handleRomSearch} disabled={!selectedRoom}>
+        <button onClick={handleRoomSearch} disabled={!selectedRoom}>
           Search by Room
         </button>
       </div>
 
       {showTable && searchResults.length > 0 && (
-        <div className="table-container" style={{ marginTop: '20px' }}>
+        <div className="table-container" style={{ marginTop: "20px" }}>
           <table>
             <thead>
               <tr>
                 <th>Ref</th>
                 <th>ชื่อวิชา</th>
+                <th>ห้องสอบ</th>
                 <th>วันสอบ</th>
                 <th>เวลาสอบ</th>
                 <th>จำนวนชั่วโมง</th>
@@ -182,14 +203,15 @@ const Search = () => {
             </thead>
             <tbody>
               {searchResults.map((item) => (
-                <tr key={item.ref}>
-                  <td>{item.ref}</td>
+                <tr key={item.Ref}>
+                  <td>{item.Ref}</td>
                   <td>{item.Course}</td>
-                  <td>{item.eDate}</td>
-                  <td>{item.eTime}</td>
-                  <td>{item.hr}</td>
-                  <td>{item.NoSt}</td>
-                  <td>{item.Lecturer}</td>
+                  <td>{item.Room}</td>
+                  <td>{item.Edate}</td>
+                  <td>{item.Etime}</td>
+                  <td>{item.Hr}</td>
+                  <td>{item.Num_st}</td>
+                  <td>{item.Proctor}</td>
                 </tr>
               ))}
             </tbody>
@@ -198,10 +220,12 @@ const Search = () => {
       )}
 
       {showTable && searchResults.length === 0 && (
-        <p style={{ marginTop: '20px' }}>No results found for the selected criteria.</p>
+        <p style={{ marginTop: "20px" }}>
+          No results found for the selected criteria.
+        </p>
       )}
 
-      <div style={{ marginTop: '20px' }}>
+      <div style={{ marginTop: "20px" }}>
         <button onClick={handleSearchReset}>Reset Search</button>
       </div>
     </div>
