@@ -5,7 +5,7 @@ import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://b6c8-2405-9800-b520-3a6f-19f4-74c1-ea73-553f.ngrok-free.app";
+    "https://4327-2405-9800-b520-3a6f-4c47-28d8-ce86-dbc5.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -13,11 +13,10 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
-  const [Data, setData] = useState([]);
   const [RoomData, setRoomData] = useState([]);
 
   // Api ExamTable
-  useEffect(() => {
+  /*useEffect(() => {
     async function read_data_database() {
       try {
         const response = await fetch(url + "/select_data/examtable");
@@ -25,24 +24,24 @@ const Search = () => {
         console.log("Fetched ExamTable data:", data);
 
         const formattedOptions = data.map((item) => ({
-          ref: item.ref,
+          Ref: item.Ref,
           Course: item.Course,
-          Lecturer: item.Lecturer,
-          eDate: item.eDate,
-          eTime: item.eTime,
-          hr: item.hr,
-          NoSt: item.no_st,
-          Room: item.Room,
+          Proctor: item.Remark,
+          Edate: item.Edate,
+          Etime: item.Etime,
+          Hr: item.Hr,
+          Num_st: item.Num_st,
           label: item.Course, // Display Course as the label
           value: item.Course, // Store Course as the value
         }));
         setData(formattedOptions);
+        
       } catch (error) {
         console.error("Error fetching ExamTable data:", error);
       }
     }
     read_data_database();
-  }, []);
+  }, []);*/
 
   // Api ExamRoom
   useEffect(() => {
@@ -63,8 +62,7 @@ const Search = () => {
           Room: item.Room,
           Proctor: item.Proctor,
           Remark: item.Remark,
-          label: item.Room, // Display Room as the label
-          value: item.Room, // Store Room as the value
+        
         }));
         setRoomData(formattedRoomOptions);
       } catch (error) {
@@ -96,8 +94,8 @@ const Search = () => {
 
   const handleCourseSearch = () => {
     if (selectedCourse) {
-      const filtered = Data.filter(
-        (item) => item.Course === selectedCourse.Course
+      const filtered = RoomData.filter(
+        (item) => item.Ref === selectedCourse.Ref
       );
       setSearchResults(filtered);
       setShowTable(true);
@@ -106,7 +104,9 @@ const Search = () => {
 
   const handleDateSearch = () => {
     if (selectedDate) {
-      const filtered = Data.filter((item) => item.eDate === selectedDate.eDate);
+      const filtered = RoomData.filter(
+        (item) => item.Edate === selectedDate.Edate
+      );
       setSearchResults(filtered);
       setShowTable(true);
     }
@@ -114,15 +114,10 @@ const Search = () => {
 
   const handleRoomSearch = () => {
     if (selectedRoom) {
-      const filtered = RoomData.filter((item) => item.Room === selectedRoom.Room);
-
-      // Filter duplicates based on 'Ref'
-      const uniqueResults = filtered.filter(
-        (item, index, self) =>
-          index === self.findIndex((t) => t.Ref === item.Ref)
+      const filtered = RoomData.filter(
+        (item) => item.Room === selectedRoom.Room
       );
-
-      setSearchResults(uniqueResults);
+      setSearchResults(filtered);
       setShowTable(true);
     }
   };
@@ -140,7 +135,11 @@ const Search = () => {
       <div className="container-form">
         <h3>ค้นหาด้วยวิชา</h3>
         <Select
-          options={Data}
+          options={RoomData.map((item) => ({
+            label: item.Course, // แสดง Course เป็น label
+            value: item.Course, // ใช้ Course เป็น value
+            ...item, // เก็บข้อมูลทั้งหมดใน item สำหรับใช้ในขั้นตอนการค้นหา
+          }))}
           onChange={(option) => {
             setSelectedCourse(option);
             setSelectedDate(null);
@@ -154,9 +153,15 @@ const Search = () => {
           Search by Course
         </button>
 
+    
+
         <h3>ค้นหาด้วยวันที่</h3>
         <Select
-          options={Data.map(item => ({ ...item, label: item.eDate, value: item.eDate }))}
+          options={RoomData.map((item) => ({
+            ...item,
+            label: item.Edate,
+            value: item.Edate,
+          }))}
           onChange={(option) => {
             setSelectedCourse(null);
             setSelectedDate(option);
@@ -171,7 +176,11 @@ const Search = () => {
 
         <h3>ค้นหาด้วยห้องสอบ</h3>
         <Select
-          options={RoomData}
+          options={RoomData.map((item) => ({
+            ...item,
+            label: item.Room,
+            value: item.Room,
+          }))}
           onChange={(option) => {
             setSelectedCourse(null);
             setSelectedDate(null);
@@ -188,10 +197,10 @@ const Search = () => {
 
       {showTable && searchResults.length > 0 && (
         <div className="table-container" style={{ marginTop: "20px" }}>
-          <table>
-            <thead>
+          <table className="table">
+            <thead className="thead-dark">
               <tr>
-                <th>Ref</th>
+                <th>ลำดับ</th>
                 <th>ชื่อวิชา</th>
                 <th>ห้องสอบ</th>
                 <th>วันสอบ</th>
@@ -203,8 +212,8 @@ const Search = () => {
             </thead>
             <tbody>
               {searchResults.map((item) => (
-                <tr key={item.Ref}>
-                  <td>{item.Ref}</td>
+                <tr key={item.No}>
+                  <td>{item.No}</td>
                   <td>{item.Course}</td>
                   <td>{item.Room}</td>
                   <td>{item.Edate}</td>
