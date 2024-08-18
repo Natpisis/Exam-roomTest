@@ -435,7 +435,7 @@ const Form = () => {
       
     </div> 
     <div className="button-row">
-      <Examform  ref = {dataExamDetail.ref}/>
+      <Examform  name = {dataExamDetail.ref}/>
       <Altexamcalform/>
     </div>
     </>

@@ -15,35 +15,6 @@ const Search = () => {
 
   const [RoomData, setRoomData] = useState([]);
 
-  // Api ExamTable
-  /*useEffect(() => {
-    async function read_data_database() {
-      try {
-        const response = await fetch(url + "/select_data/examtable");
-        const data = await response.json();
-        console.log("Fetched ExamTable data:", data);
-
-        const formattedOptions = data.map((item) => ({
-          Ref: item.Ref,
-          Course: item.Course,
-          Proctor: item.Remark,
-          Edate: item.Edate,
-          Etime: item.Etime,
-          Hr: item.Hr,
-          Num_st: item.Num_st,
-          label: item.Course, // Display Course as the label
-          value: item.Course, // Store Course as the value
-        }));
-        setData(formattedOptions);
-        
-      } catch (error) {
-        console.error("Error fetching ExamTable data:", error);
-      }
-    }
-    read_data_database();
-  }, []);*/
-
-  // Api ExamRoom
   useEffect(() => {
     async function read_data_ExamRoom() {
       try {
@@ -62,7 +33,6 @@ const Search = () => {
           Room: item.Room,
           Proctor: item.Proctor,
           Remark: item.Remark,
-        
         }));
         setRoomData(formattedRoomOptions);
       } catch (error) {
@@ -71,6 +41,22 @@ const Search = () => {
     }
     read_data_ExamRoom();
   }, []);
+
+  const getUniqueDates = (data) => {
+    const uniqueDates = [...new Set(data.map(item => item.Edate))];
+    return uniqueDates.map(date => ({
+      label: date,
+      value: date,
+    }));
+  };
+
+  const getUniqueRooms = (data) => {
+    const uniqueRooms = [...new Set(data.map(item => item.Room))];
+    return uniqueRooms.map(room => ({
+      label: room,
+      value: room,
+    }));
+  };
 
   const customStyles = {
     control: (provided) => ({
@@ -105,7 +91,7 @@ const Search = () => {
   const handleDateSearch = () => {
     if (selectedDate) {
       const filtered = RoomData.filter(
-        (item) => item.Edate === selectedDate.Edate
+        (item) => item.Edate === selectedDate.value
       );
       setSearchResults(filtered);
       setShowTable(true);
@@ -115,7 +101,7 @@ const Search = () => {
   const handleRoomSearch = () => {
     if (selectedRoom) {
       const filtered = RoomData.filter(
-        (item) => item.Room === selectedRoom.Room
+        (item) => item.Room === selectedRoom.value
       );
       setSearchResults(filtered);
       setShowTable(true);
@@ -136,9 +122,9 @@ const Search = () => {
         <h3>ค้นหาด้วยวิชา</h3>
         <Select
           options={RoomData.map((item) => ({
-            label: item.Course, // แสดง Course เป็น label
-            value: item.Course, // ใช้ Course เป็น value
-            ...item, // เก็บข้อมูลทั้งหมดใน item สำหรับใช้ในขั้นตอนการค้นหา
+            label: item.Course,
+            value: item.Course,
+            ...item,
           }))}
           onChange={(option) => {
             setSelectedCourse(option);
@@ -148,20 +134,14 @@ const Search = () => {
           value={selectedCourse}
           styles={customStyles}
         />
-        <br></br>
+        <br />
         <button onClick={handleCourseSearch} disabled={!selectedCourse}>
           Search by Course
         </button>
 
-    
-
         <h3>ค้นหาด้วยวันที่</h3>
         <Select
-          options={RoomData.map((item) => ({
-            ...item,
-            label: item.Edate,
-            value: item.Edate,
-          }))}
+          options={getUniqueDates(RoomData)}
           onChange={(option) => {
             setSelectedCourse(null);
             setSelectedDate(option);
@@ -176,11 +156,7 @@ const Search = () => {
 
         <h3>ค้นหาด้วยห้องสอบ</h3>
         <Select
-          options={RoomData.map((item) => ({
-            ...item,
-            label: item.Room,
-            value: item.Room,
-          }))}
+          options={getUniqueRooms(RoomData)}
           onChange={(option) => {
             setSelectedCourse(null);
             setSelectedDate(null);
@@ -189,7 +165,7 @@ const Search = () => {
           value={selectedRoom}
           styles={customStyles}
         />
-        <br></br>
+        <br />
         <button onClick={handleRoomSearch} disabled={!selectedRoom}>
           Search by Room
         </button>
