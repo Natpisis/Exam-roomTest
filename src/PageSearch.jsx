@@ -1,6 +1,6 @@
 import React from 'react'
-import Navbar from './componant/Navbar'
-import Search from './componant/Search'
+import Navbar from './Navbar/Navbar'
+import Search from './SentForm/Search'
 
 function PageSearch() {
   return (

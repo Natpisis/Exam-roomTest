@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import "./Form.css";
 import Select from "react-select";
 import axios from "axios";
+import Examform from "../Printpdf/Examform.jsx";
+import Altexamcalform from "../Printpdf/Altexamcalform.jsx";
 
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
   const url =
-    "https://4327-2405-9800-b520-3a6f-4c47-28d8-ce86-dbc5.ngrok-free.app";
+    "https://a4ee-2405-9800-b520-3a6f-25e2-5e87-9e26-79bc.ngrok-free.app";
 
   const [Data, setData] = useState({
     Ref: 0,
@@ -179,6 +181,8 @@ const Form = () => {
   };
 
   return (
+    <>
+    
     <div className="body-form">
       <form className="container-form" onSubmit={handleSubmit}>
         <h1>โปรแกรมห้องข้อสอบ</h1>
@@ -426,8 +430,15 @@ const Form = () => {
             Submit
           </button>
         </div>
+        
       </form>
+      
+    </div> 
+    <div className="button-row">
+      <Examform  ref = {dataExamDetail.ref}/>
+      <Altexamcalform/>
     </div>
+    </>
   );
 };
 

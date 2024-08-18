@@ -1,5 +1,6 @@
 import React from 'react'
-import Loginform from './componant/Loginform'
+import Loginform from './SentForm/Loginform'
+
 
 
 function Loginpage() {

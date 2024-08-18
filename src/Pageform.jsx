@@ -1,7 +1,8 @@
 import { useState,useEffect } from 'react'
 import './Pageform.css'
-import Form from './componant/Form'
-import Navbar from './componant/Navbar'
+import Form from './SentForm/Form'
+import Navbar from './Navbar/Navbar'
+
 
 function Pageform() {
   

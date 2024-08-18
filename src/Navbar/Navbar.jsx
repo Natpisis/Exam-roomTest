@@ -1,6 +1,7 @@
 import React from 'react';
 import './Navbar.css';
-import Search from './Search';
+import Search from '../SentForm/Search';
+
 
 function Navbar() {
   return (

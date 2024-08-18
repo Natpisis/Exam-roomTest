@@ -1,0 +1,25 @@
+.container-form{
+  max-width: auto;
+  background: #fff;
+  width: auto;
+  padding: 25px 40px 10px 40px;
+  
+}
+.body-form{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 10px;
+}
+.form-row{
+  margin-right: 30px;
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-start; /* จัดให้ปุ่มชิดซ้าย */
+  align-items: center; /* ทำให้ปุ่มอยู่ตรงกลาง */
+  gap: 20; /* ลบช่องว่างระหว่างปุ่ม */
+}
+

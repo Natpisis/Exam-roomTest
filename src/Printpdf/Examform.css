@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+
+/* General styles for screen */
+/*body {
+  font-family: "Kanit", sans-serif;
+  background: #FFFFFF;
+  font-size: 24px;
+}*/
+
+.headerprintpdf {
+  font-size: 32px;
+}
+
+.pdfprint {
+  text-align: left; /* Changed text-align to left as per your request */
+  font-size: 18px;
+}
+
+.print-section {
+  display: none;
+}
+
+.no-print {
+  display: block; /* Default display for screen */
+}
+
+/* Styles for print */
+@media print {
+  body {
+    font-family: "Kanit", sans-serif;
+    background: #bdc3c7;
+    color: #00458a;
+    font-size: 12pt; /* Reduced font size for print */
+    margin: 0; /* Reset body margin */
+  }
+  
+  
+  .print-section {
+    display: block;
+    margin: 0 auto; /* Center content horizontally */
+    width: 100%; /* Make sure the content uses full width */
+    max-width: 210mm; /* A4 width in mm */
+    padding: 0; /* Reset padding */
+  }
+
+  .no-print {
+    display: none; /* Hide non-print content */
+  }
+
+  .content {
+    display: block; /* Ensure content is visible when printing */
+  }
+  
+  .content-visible {
+    display: block;
+  }
+  
+  .table-container {
+    display: flex;
+    justify-content: space-between; /* Adjust space between tables */
+    gap: 10px; /* Space between tables */
+  }
+  
+  table {
+    width: 50%; /* Ensure tables take equal width in Flexbox */
+  }
+
+  /* Adjust spacing for tables and checkboxes */
+  table {
+    width: 100%;
+    font-size: 10pt; /* Reduced font size for tables */
+  }
+  
+  .mb-1 {
+    margin-bottom: 5px; /* Reduce bottom margin for items */
+  }
+
+  .checkbox-container {
+    margin-top: 5px; /* Reduce top margin for checkboxes */
+  }
+
+  .hidden {
+    display: none;
+  }
+  
+}
+
