@@ -22,4 +22,7 @@
   align-items: center; /* ทำให้ปุ่มอยู่ตรงกลาง */
   gap: 20; /* ลบช่องว่างระหว่างปุ่ม */
 }
+.top-mardin{
+  margin-top: 20px;
+}
 

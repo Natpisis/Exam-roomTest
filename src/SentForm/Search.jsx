@@ -119,7 +119,7 @@ const Search = () => {
   return (
     <div className="body-form">
       <div className="container-form">
-        <h3>ค้นหาด้วยวิชา</h3>
+        <h3 className = "top-mardin">ค้นหาด้วยวิชา</h3>
         <Select
           options={RoomData.map((item) => ({
             label: item.Course,

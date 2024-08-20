@@ -10,28 +10,40 @@ const Form = () => {
   const url =
     "https://a4ee-2405-9800-b520-3a6f-25e2-5e87-9e26-79bc.ngrok-free.app";
 
+  
+    const currentDate = new Date();
+
+  // Convert the year to the Thai Buddhist calendar year
+    const buddhistYear = currentDate.getFullYear() + 543;
+
+  // Format the date as 'd-MM-yyyy' (e.g., 1-01-2565)
+    const formattedDate = `${currentDate.getDate()}-${("0" + (currentDate.getMonth() + 1)).slice(-2)}-${buddhistYear}`;
+    
+
   const [Data, setData] = useState({
     Ref: 0,
-    NoSt: "",
+    NoSt: "-",
     submit: false,
-    sub_date: new Date(),
-    Lecturer: "",
-    copy: "",
-    page: "",
+    sub_date: formattedDate,
+    Lecturer: "-",
+    copy: "-",
+    page: "-",
     recive: false,
-    recDate: "",
-    qty: "",
-    staple_conner: "",
-    staple_apart: "",
+    recDate: "-",
+    qty: "-",
+    staple_conner: "-",
+    staple_apart: "-",
     calculator: "อนุญาต",
     answerSheet: "ใช้ได้",
-    answerBookUse: "",
-    remark: "",
-    color: "",
-    eDate: "",
-    eTime: "",
-    hr: "",
+    answerBookUse: "-",
+    remark: "-",
+    color: "-",
+    eDate: "-",
+    eTime: "-",
+    hr: "-",
   });
+
+  
 
   const [dataE, setDataE] = useState([]);
   const [dataExamDetail, setDataExamDetail] = useState([]);
@@ -139,12 +151,29 @@ const Form = () => {
   //เช็คว่ากรอกครบไหม
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", Data);
-    if (!Data.total) {
-      alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
-      Sentdata();
+    
+    // Checking if required fields are filled
+    if (
+      !Data.copy ||
+      !Data.page ||
+      !Data.color ||
+      !Data.staple_conner ||
+      !Data.staple_apart ||
+      !Data.calculator ||
+      !Data.answerSheet ||
+      !Data.remark 
+    ) {
+      alert("กรุณากรอกข้อมูลให้ครบทุกช่องในรายละเอียดการสอบ");
       return;
     }
+    setData((prevData) => ({
+      ...prevData,
+      submit: true,
+    }));
+    console.log("Form data submitted:", Data);
+    
+    // Send data if validation passes
+    Sentdata();
   };
 
   async function Sentdata() {
@@ -185,7 +214,7 @@ const Form = () => {
     
     <div className="body-form">
       <form className="container-form" onSubmit={handleSubmit}>
-        <h1>โปรแกรมห้องข้อสอบ</h1>
+        <h1 className = "top-mardin">โปรแกรมห้องข้อสอบ</h1>
 
         <div>
           <label htmlFor="type">ชื่อวิชา:</label>
@@ -317,7 +346,7 @@ const Form = () => {
             <label htmlFor="date">วันที่ส่ง:</label>
             <input
               className="form-row"
-              type="date"
+              type="text"
               id="SubDate"
               name="sub_date"
               value={Data.sub_date}
@@ -408,6 +437,7 @@ const Form = () => {
               onChange={handleChange}
             />
             <datalist id="RemarkOptions">
+              <option value="เอากระดาษเข้าได้"></option>
               <option value="เอากระดาษเข้าได้"></option>
             </datalist>
             <br></br>
