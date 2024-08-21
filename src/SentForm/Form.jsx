@@ -8,7 +8,7 @@ import Altexamcalform from "../Printpdf/Altexamcalform.jsx";
 // Const ส่งข้อมูลไปเก็บ
 const Form = () => {
   const url =
-    "https://a4ee-2405-9800-b520-3a6f-25e2-5e87-9e26-79bc.ngrok-free.app";
+    "https://2cb0-2405-9800-b520-3a6f-ac8f-f9c5-ebb6-3516.ngrok-free.app";
 
   
     const currentDate = new Date();
@@ -42,6 +42,40 @@ const Form = () => {
     eTime: "-",
     hr: "-",
   });
+
+  const [submissionData, setSubmissionData] = useState({
+    Ref: Data.Ref,
+    Lecturer:Data.Lecturer, //ชื่อ อาจาร์ย
+    copy: Data.copy,
+    page: Data.page,
+    color: Data.color,
+    sub_date: Data.sub_date,
+    staple_conner: Data.staple_conner,
+    staple_apart: Data.staple_apart,
+    calculator: Data.calculator,
+    answerSheet: Data.answerSheet,
+    remark: Data.remark,
+    fileexam: null, 
+  });
+  
+  // When you need to update this object, you can do something like this:
+  useEffect(() => {
+    setSubmissionData({
+      Ref: Data.Ref,
+      Lecturer:Data.Lecturer,
+      copy: Data.copy,
+      page: Data.page,
+      color: Data.color,
+      sub_date: Data.sub_date,
+      staple_conner: Data.staple_conner,
+      staple_apart: Data.staple_apart,
+      calculator: Data.calculator,
+      answerSheet: Data.answerSheet,
+      remark: Data.remark,
+      fileexam: Data.fileexam || null, 
+    });
+  }, [Data]);
+  
 
   
 
@@ -151,8 +185,7 @@ const Form = () => {
   //เช็คว่ากรอกครบไหม
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // Checking if required fields are filled
+  
     if (
       !Data.copy ||
       !Data.page ||
@@ -161,24 +194,42 @@ const Form = () => {
       !Data.staple_apart ||
       !Data.calculator ||
       !Data.answerSheet ||
-      !Data.remark 
+      !Data.remark
     ) {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่องในรายละเอียดการสอบ");
       return;
     }
+  
+    const submissionData = {
+      Ref: Data.Ref,
+      Lecturer:Data.Lecturer,
+      copy: Data.copy,
+      page: Data.page,
+      color: Data.color,
+      sub_date: Data.sub_date,
+      staple_conner: Data.staple_conner,
+      staple_apart: Data.staple_apart,
+      calculator: Data.calculator,
+      answerSheet: Data.answerSheet,
+      remark: Data.remark,
+      fileexam: Data.fileexam || null,
+    };
+  
     setData((prevData) => ({
       ...prevData,
       submit: true,
     }));
-    console.log("Form data submitted:", Data);
+  
+    console.log("Submission data:", submissionData);
+  
     
-    // Send data if validation passes
-    Sentdata();
+    Sentdata(submissionData);
   };
-
-  async function Sentdata() {
+  
+  // ส่งข้อมูลไปยัง Database
+  async function Sentdata(submissionData) {
     const response = await axios.post(
-      url + "/Edit_DetailExam/" + JSON.stringify(Data),
+      url + "/Edit_DetailExam/" + JSON.stringify(submissionData),
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -187,6 +238,7 @@ const Form = () => {
     );
     console.log(response);
   }
+  
 
   // css select
   const customStyles = {
@@ -349,7 +401,7 @@ const Form = () => {
               type="text"
               id="SubDate"
               name="sub_date"
-              value={Data.sub_date}
+              value= {formattedDate}
               onChange={handleChange}
             />
             <label htmlFor="StapleApart">รูปแบบการเย็บ:</label>
