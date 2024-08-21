@@ -55,6 +55,7 @@ const Form = () => {
     calculator: Data.calculator,
     answerSheet: Data.answerSheet,
     remark: Data.remark,
+    submit:Data.submit,
     fileexam: null, 
   });
   
@@ -67,6 +68,7 @@ const Form = () => {
       page: Data.page,
       color: Data.color,
       sub_date: Data.sub_date,
+      submit:Data.submit,
       staple_conner: Data.staple_conner,
       staple_apart: Data.staple_apart,
       calculator: Data.calculator,
@@ -143,7 +145,7 @@ const Form = () => {
       }
     }
     read_data_Examdetail();
-  }, []);
+  }, [Data]);
 
   // เปลี่ยนค่าในช่อง INPUT
   const handleChange = (e) => {
@@ -166,6 +168,7 @@ const Form = () => {
       eDate: selectedOption.eDate,
       eTime: selectedOption.eTime,
       hr: selectedOption.hr,
+      submit:selectedDetail.submit,
       copy: selectedDetail.copy,
       page: selectedDetail.page,
       color: selectedDetail.color,
@@ -199,6 +202,11 @@ const Form = () => {
       alert("กรุณากรอกข้อมูลให้ครบทุกช่องในรายละเอียดการสอบ");
       return;
     }
+
+    setData((prevData) => ({
+      ...prevData,
+      submit: true,
+    }));
   
     const submissionData = {
       Ref: Data.Ref,
@@ -212,13 +220,11 @@ const Form = () => {
       calculator: Data.calculator,
       answerSheet: Data.answerSheet,
       remark: Data.remark,
+      submit:Data.submit,
       fileexam: Data.fileexam || null,
     };
   
-    setData((prevData) => ({
-      ...prevData,
-      submit: true,
-    }));
+    
   
     console.log("Submission data:", submissionData);
   
@@ -260,7 +266,7 @@ const Form = () => {
       color: "#000000",
     }),
   };
-
+  console.log("REF::" + Data.Ref)
   return (
     <>
     
@@ -348,9 +354,9 @@ const Form = () => {
           <input
             className="form-row"
             type="text"
-            id="Submit"
-            name="Submit"
-            value={Data.submit ? "ส่งแล้ว" : "ยังไม่ได้ส่ง"}
+            id="submit"
+            name="submit"
+            value={Data.submit ? "ส่งแล้ว" : "ยังไม่ส่ง"}
             readOnly
           />
         </div>
@@ -517,7 +523,7 @@ const Form = () => {
       
     </div> 
     <div className="button-row">
-      <Examform  name = {dataExamDetail.ref}/>
+      <Examform  id = {Data.Ref}/>
       <Altexamcalform/>
     </div>
     </>
