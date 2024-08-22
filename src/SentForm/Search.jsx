@@ -5,11 +5,12 @@ import "./Search.css";
 
 const Search = () => {
   const url =
-    "https://2cb0-2405-9800-b520-3a6f-ac8f-f9c5-ebb6-3516.ngrok-free.app";
+    "https://300b-2405-9800-b520-3a6f-ac8f-f9c5-ebb6-3516.ngrok-free.app";
 
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedRoom, setSelectedRoom] = useState(null);
+  const [selectedSubmit, setSelectedSubmit] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
   const [showTable, setShowTable] = useState(false);
 
@@ -18,7 +19,9 @@ const Search = () => {
   useEffect(() => {
     async function read_data_ExamRoom() {
       try {
-        const response = await fetch(url + "/select_data/roomexam");
+        const response = await fetch(
+          url + "/select_data/detailexaminnerjoinroomexam"
+        );
         const dataDetail = await response.json();
         console.log("Fetched RoomExam data:", dataDetail);
 
@@ -33,6 +36,7 @@ const Search = () => {
           Room: item.Room,
           Proctor: item.Proctor,
           Remark: item.Remark,
+          Submit: item.Submit,
         }));
         setRoomData(formattedRoomOptions);
       } catch (error) {
@@ -43,18 +47,26 @@ const Search = () => {
   }, []);
 
   const getUniqueDates = (data) => {
-    const uniqueDates = [...new Set(data.map(item => item.Edate))];
-    return uniqueDates.map(date => ({
+    const uniqueDates = [...new Set(data.map((item) => item.Edate))];
+    return uniqueDates.map((date) => ({
       label: date,
       value: date,
     }));
   };
 
   const getUniqueRooms = (data) => {
-    const uniqueRooms = [...new Set(data.map(item => item.Room))];
-    return uniqueRooms.map(room => ({
+    const uniqueRooms = [...new Set(data.map((item) => item.Room))];
+    return uniqueRooms.map((room) => ({
       label: room,
       value: room,
+    }));
+  };
+
+  const getUniqueSubmit = (data) => {
+    const uniqueSubmit = [...new Set(data.map((item) => item.Submit))];
+    return uniqueSubmit.map((submitStatus) => ({
+      label: submitStatus ? "ส่งแล้ว" : "ยังไม่ส่ง",
+      value: submitStatus ,
     }));
   };
 
@@ -107,11 +119,21 @@ const Search = () => {
       setShowTable(true);
     }
   };
+  const handleSubmitSearch = () => {
+    if (selectedSubmit) {
+      const filtered = RoomData.filter(
+        (item) => item.Submit === selectedSubmit.value
+      );
+      setSearchResults(filtered);
+      setShowTable(true);
+    }
+  };
 
   const handleSearchReset = () => {
     setSelectedCourse(null);
     setSelectedDate(null);
     setSelectedRoom(null);
+    setSelectedSubmit(null);
     setSearchResults([]);
     setShowTable(false);
   };
@@ -119,7 +141,7 @@ const Search = () => {
   return (
     <div className="body-form">
       <div className="container-form">
-        <h3 className = "top-mardin">ค้นหาด้วยวิชา</h3>
+        <h3 className="top-mardin">ค้นหาด้วยวิชา</h3>
         <Select
           options={RoomData.map((item) => ({
             label: item.Course,
@@ -130,6 +152,7 @@ const Search = () => {
             setSelectedCourse(option);
             setSelectedDate(null);
             setSelectedRoom(null);
+            setSelectedSubmit(null);
           }}
           value={selectedCourse}
           styles={customStyles}
@@ -146,10 +169,12 @@ const Search = () => {
             setSelectedCourse(null);
             setSelectedDate(option);
             setSelectedRoom(null);
+            setSelectedSubmit(null);
           }}
           value={selectedDate}
           styles={customStyles}
         />
+        <br />
         <button onClick={handleDateSearch} disabled={!selectedDate}>
           Search by Date
         </button>
@@ -161,6 +186,7 @@ const Search = () => {
             setSelectedCourse(null);
             setSelectedDate(null);
             setSelectedRoom(option);
+            setSelectedSubmit(null);
           }}
           value={selectedRoom}
           styles={customStyles}
@@ -168,6 +194,23 @@ const Search = () => {
         <br />
         <button onClick={handleRoomSearch} disabled={!selectedRoom}>
           Search by Room
+        </button>
+
+        <h3>ค้นหาด้วยสถานะการส่งข้อสอบ</h3>
+        <Select
+          options={getUniqueSubmit(RoomData)}
+          onChange={(option) => {
+            setSelectedCourse(null);
+            setSelectedDate(null);
+            setSelectedRoom(null);
+            setSelectedSubmit(option);
+          }}
+          value={selectedSubmit}
+          styles={customStyles}
+        />
+        <br />
+        <button onClick={handleSubmitSearch} disabled={!selectedSubmit}>
+          Search by SubmitStatus
         </button>
       </div>
 
@@ -184,6 +227,7 @@ const Search = () => {
                 <th>จำนวนชั่วโมง</th>
                 <th>จำนวนนักศึกษา</th>
                 <th>ชื่ออาจาร์ย</th>
+                <th>สถานะการส่งข้อสอบ</th>
               </tr>
             </thead>
             <tbody>
@@ -197,6 +241,7 @@ const Search = () => {
                   <td>{item.Hr}</td>
                   <td>{item.Num_st}</td>
                   <td>{item.Proctor}</td>
+                  <td>{item.Submit? "ส่งแล้ว" : "ยังไม่ส่ง"}</td>
                 </tr>
               ))}
             </tbody>
