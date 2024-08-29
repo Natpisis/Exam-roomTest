@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Loginform.css";
-import SUlogo from "./SU_logo.png";
+import SU_logo from "./SU_logo.png";
 import CryptoJS from "crypto-js";
 import { useNavigate } from 'react-router-dom';
 
@@ -43,7 +43,7 @@ function Loginform() {
     <form className="container-logo" onSubmit={handleSubmit}>
   <div className="bodyLogin">
     <div className="logo-container">
-      <img src={SUlogo} className="LogoSu"  />
+      <img src={SU_logo} className="LogoSu"  />
     </div>
     <h1 className="Textcenter">Login Silpakorn</h1>
     <div className="form-group">
